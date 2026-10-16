@@ -1,0 +1,38 @@
+syntax = "proto3";
+package task.v1;
+option go_package = "example.com/task-tracker-api/gen/task/v1;taskv1";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+service TaskService {
+  rpc CreateTask(CreateTaskRequest) returns (Task) {
+    option (google.api.http) = { post: "/v1/tasks" body: "*" };
+  }
+  rpc GetTask(GetTaskRequest) returns (Task) {
+    option (google.api.http) = { get: "/v1/tasks/{id}" };
+  }
+  rpc ListTasks(ListTasksRequest) returns (ListTasksResponse) {
+    option (google.api.http) = { get: "/v1/tasks" };
+  }
+  rpc CompleteTask(CompleteTaskRequest) returns (Task) {
+    option (google.api.http) = { post: "/v1/tasks/{id}/complete" };
+  }
+  rpc DeleteTask(DeleteTaskRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = { delete: "/v1/tasks/{id}" };
+  }
+}
+message CreateTaskRequest {
+  string title = 1;
+  string description = 2;
+}
+message GetTaskRequest { string id = 1; }
+message ListTasksRequest {}
+message ListTasksResponse { repeated Task tasks = 1; }
+message CompleteTaskRequest { string id = 1; }
+message DeleteTaskRequest { string id = 1; }
+message Task {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  bool completed = 4;
+}
